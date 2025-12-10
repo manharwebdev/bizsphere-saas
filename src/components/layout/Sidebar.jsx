@@ -1,9 +1,14 @@
 import { LayoutDashboard, ShoppingBag, FileText, BarChart2, Settings, LogOut } from 'lucide-react';
+import { Link, useLocation } from 'react-router-dom'; // Import Link
 
 const Sidebar = () => {
+  const location = useLocation(); // Hook to get current URL
+
+  // Helper to check if a link is active
+  const isActive = (path) => location.pathname === path;
+
   return (
     <aside className="w-64 bg-slate-900 text-white h-screen fixed left-0 top-0 flex flex-col border-r border-slate-800">
-      {/* Logo Section */}
       <div className="h-16 flex items-center px-6 border-b border-slate-800">
         <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center mr-3">
           <span className="font-bold text-lg">B</span>
@@ -11,16 +16,28 @@ const Sidebar = () => {
         <span className="text-xl font-bold tracking-tight">BizSphere</span>
       </div>
 
-      {/* Navigation Links */}
       <nav className="flex-1 py-6 px-3 space-y-1">
-        <SidebarItem icon={<LayoutDashboard size={20} />} text="Dashboard" active />
-        <SidebarItem icon={<ShoppingBag size={20} />} text="Inventory" />
-        <SidebarItem icon={<FileText size={20} />} text="Invoices" />
-        <SidebarItem icon={<BarChart2 size={20} />} text="Reports" />
-        <SidebarItem icon={<Settings size={20} />} text="Settings" />
+        {/* Use Link component + Dynamic Active State */}
+        <SidebarItem 
+          icon={<LayoutDashboard size={20} />} 
+          text="Dashboard" 
+          to="/dashboard" 
+          active={isActive('/dashboard')} 
+        />
+        <SidebarItem 
+          icon={<ShoppingBag size={20} />} 
+          text="Inventory" 
+          to="/inventory" 
+          active={isActive('/inventory')} 
+        />
+        <SidebarItem 
+          icon={<BarChart2 size={20} />} 
+          text="Reports" 
+          to="/reports" 
+          active={isActive('/reports')} 
+        />
       </nav>
 
-      {/* Footer / Logout */}
       <div className="p-4 border-t border-slate-800">
         <button className="flex items-center w-full px-4 py-2 text-slate-400 hover:text-white hover:bg-slate-800 rounded-lg transition-colors">
           <LogOut size={20} className="mr-3" />
@@ -31,11 +48,11 @@ const Sidebar = () => {
   );
 };
 
-// Internal Component for DRY (Don't Repeat Yourself) principle
-// We use 'active' prop to style the selected tab differently
-const SidebarItem = ({ icon, text, active = false }) => {
+// Updated SidebarItem to accept 'to' prop and use Link
+const SidebarItem = ({ icon, text, to, active = false }) => {
   return (
-    <div
+    <Link 
+      to={to} 
       className={`flex items-center px-4 py-3 rounded-lg cursor-pointer transition-all ${
         active
           ? "bg-blue-600 text-white shadow-lg shadow-blue-900/20"
@@ -44,7 +61,7 @@ const SidebarItem = ({ icon, text, active = false }) => {
     >
       <div className="mr-3">{icon}</div>
       <span className="font-medium">{text}</span>
-    </div>
+    </Link>
   );
 };
 
